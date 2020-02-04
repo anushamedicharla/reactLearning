@@ -17,7 +17,8 @@ class App extends Component {
       {name: "Manu", age: '28'},
       {name: "Steph", age: '18'}
     ],
-    otherState: 'Some Other Values.'
+    otherState: 'Some Other Values.',
+    showPersons: false,
   }
   /*  Typically we use a name followed by 'Handler' for methods we don't actively call but assign as an event handler. 
       This is optional. By using this ES6 syntax, we are preserving the 'this' value. */
@@ -44,6 +45,13 @@ class App extends Component {
     ]})
   };
 
+  togglePersonHandler = () => {
+    // This fat arrow function syntax ensures that 'this' keyword aleays returns to this class.
+    const doesShow = this.state.showPersons;
+    this.setState({showPersons: !doesShow});
+
+  }
+
 
   /* React calls this method to render some HTML to the screen. This is JSX code. */
   /* Our JSX must have only one Root element per component. */
@@ -67,16 +75,19 @@ class App extends Component {
           Even though our handler is called here, it won't be executed untill our anaonymos function is called on click. 
           This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
           methods. */}
-        <button style={style} onClick={() => this.switchNameHandler('mussss')}>Switch Name</button> 
-        <div>
-          {/* Passing a reference to this switchNameHandler method. So we are passing methods as props. */}
-          <Person click={this.switchNameHandler.bind(this,'maximusssosss')}
-            name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-          <Person changed={this.nameChangedHandler}
-            name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Racing</Person>
-          <Person 
-            name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-        </div>
+        <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button> 
+        {/* This below conditional rendering is done like any other ternary expression. */}
+        {this.state.showPersons ? 
+          <div>
+            {/* Passing a reference to this switchNameHandler method. So we are passing methods as props. */}
+            <Person click={this.switchNameHandler.bind(this,'maximusssosss')}
+              name={this.state.persons[0].name} age={this.state.persons[0].age}/>
+            <Person changed={this.nameChangedHandler}
+              name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Racing</Person>
+            <Person 
+              name={this.state.persons[2].name} age={this.state.persons[2].age}/>
+          </div> : null
+        }
       </div>
     );
     /* the code above compiles to this below: 
