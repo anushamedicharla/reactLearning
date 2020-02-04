@@ -64,6 +64,22 @@ class App extends Component {
       cursor: 'pointer'
     };
 
+    let persons = null;
+
+    if(this.state.showPersons) {
+      persons = (
+        <div>
+          {/* Passing a reference to this switchNameHandler method. So we are passing methods as props. */}
+          <Person click={this.switchNameHandler.bind(this,'maximusssosss')}
+            name={this.state.persons[0].name} age={this.state.persons[0].age}/>
+          <Person changed={this.nameChangedHandler}
+            name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Racing</Person>
+          <Person 
+            name={this.state.persons[2].name} age={this.state.persons[2].age}/>
+        </div> 
+      );
+    }
+
     return ( // These paranthesis are used so that we could structure this JSX across multiple lines.
       <div className="App">
         <h3> Hi I am an App!!</h3>
@@ -76,18 +92,8 @@ class App extends Component {
           This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
           methods. */}
         <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button> 
-        {/* This below conditional rendering is done like any other ternary expression. */}
-        {this.state.showPersons ? 
-          <div>
-            {/* Passing a reference to this switchNameHandler method. So we are passing methods as props. */}
-            <Person click={this.switchNameHandler.bind(this,'maximusssosss')}
-              name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-            <Person changed={this.nameChangedHandler}
-              name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Racing</Person>
-            <Person 
-              name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-          </div> : null
-        }
+        {persons}
+          
       </div>
     );
     /* the code above compiles to this below: 
