@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import Radium, {StyleRoot} from 'radium';
 /*  This imported component should be given an upper case starting character because the lower case ones like div and h1
     are reserved for the actual HTML elements. */
 import Person from './Person/Person';
@@ -31,18 +32,35 @@ class App extends Component {
         The following does not touch the other property (otherState)
     */
     this.setState({persons: [
-      {name: newName, age: '29'},
-      {name: "Manu", age: '28'},
-      {name: "Steph", age: '27'}
+      {id:'a', name: newName, age: '29'},
+      {id:'b', name: "Manu", age: '28'},
+      {id:'c', name: "Steph", age: '27'}
     ]})
   };
 
-  nameChangedHandler = (event) => {
-    this.setState({persons: [
-      {name: 'Max', age: '29'},
-      {name: event.target.value, age: '28'},
-      {name: "Steph", age: '27'}
-    ]})
+  nameChangedHandler = (event, id) => {
+    const personIndex = this.persons.findIndex( p => {
+        return id === p.id;
+    });
+
+    const person = {...this.state.persons[personIndex]}; // Spread operator for objects
+    // Alternative to spead operator : 
+    // const person = Object.assign({}, this.state.persons[personIndex]);
+
+    person.name = event.target.value;
+
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+    this.setState({persons: persons});
+  };
+
+  deletePersonHandler = (personIndex) => {
+    // Slice method on the array simply copies the array. This is so that we do not directly mutate the actual state.
+    // const persons = this.state.persons.slice();
+    // Or we can use the spread operator:
+    const persons = [...this.state.persons];
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons});
   };
 
   togglePersonHandler = () => {
@@ -61,40 +79,65 @@ class App extends Component {
       font: 'inherit',
       border: '1px solid blue',
       padding: '8px',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      ':hover': { // This is possible with Radium
+        backgroundColor: 'lightgreen',
+        color: 'black'
+      }
     };
 
     let persons = null;
 
     if(this.state.showPersons) {
+            // This Key property allows React to keep tract of the individial elements of a list so that it has a clear property 
+            // to compare with and see which elements changed and which didn't so that it does not re-render all the elements 
+            // everytime.
       persons = (
         <div>
-          {/* Passing a reference to this switchNameHandler method. So we are passing methods as props. */}
-          <Person click={this.switchNameHandler.bind(this,'maximusssosss')}
-            name={this.state.persons[0].name} age={this.state.persons[0].age}/>
-          <Person changed={this.nameChangedHandler}
-            name={this.state.persons[1].name} age={this.state.persons[1].age}>My Hobbies: Racing</Person>
-          <Person 
-            name={this.state.persons[2].name} age={this.state.persons[2].age}/>
+          {this.state.persons.map((person, index) => {
+            return <Person  click={() => this.deletePersonHandler(index)} name={person.name}
+                    age={person.age}
+                    key={person.id}
+                    changed={(event) => this.nameChangedHandler(event, person.id)}/>
+          })}                                                                                                                                                                                                                                                                                                                                                                                                                 
         </div> 
       );
+
+      style.backgroundColor = 'green';
+      style[':hover'] =  { // This is possible with Radium. Can work with pseudo selectors
+        backgroundColor: 'salmon',
+        color: 'black'
+      }
     }
 
+    const classes = [];
+    if(this.state.persons.length <= 2) {
+      classes.push('red');
+    }
+
+    if(this.state.persons.length <= 1) {
+      classes.push('bold');
+    }
+
+    // We need to wrap our component UI in this StyleRoot component provided by radium for media queries, keyframes and some others.
     return ( // These paranthesis are used so that we could structure this JSX across multiple lines.
-      <div className="App">
-        <h3> Hi I am an App!!</h3>
-        {/* If we add the paranthesis here in the onclick method assignment at the end , it would call the function as soon as this JSX is rendered in the DOM. 
-          Instead we want to wait for the click action. We only want to pass the reference
-          this.switchNameHandler.bind(this,'maximusss')
-          
-          another alternative is to pass an anonymus arrow function. and in return statement, we call our handler method.
-          Even though our handler is called here, it won't be executed untill our anaonymos function is called on click. 
-          This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
-          methods. */}
-        <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button> 
-        {persons}
-          
-      </div>
+      <StyleRoot>
+        <div className="App">
+          <h3> Hi I am an App!!</h3>
+          <p className={classes.join(' ')} >This is really working !!</p>
+          {/* If we add the paranthesis here in the onclick method assignment at the end , it would call the function as soon as this JSX is rendered in the DOM. 
+            Instead we want to wait for the click action. We only want to pass the reference
+            this.switchNameHandler.bind(this,'maximusss')
+            
+            another alternative is to pass an anonymus arrow function. and in return statement, we call our handler method.
+            Even though our handler is called here, it won't be executed untill our anaonymos function is called on click. 
+            This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
+            methods. */}
+          <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button> 
+          {persons}
+            
+        </div>
+      </StyleRoot>
     );
     /* the code above compiles to this below: 
        The argument flow :
@@ -110,4 +153,5 @@ class App extends Component {
 
 }
 
-export default App;
+//Radium here is a higher order component that wraps our component and adds some extra funtionalities to it.
+export default Radium(App);
