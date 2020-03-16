@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import './App.css';
-import Radium, {StyleRoot} from 'radium';
+// import Radium, {StyleRoot} from 'radium';
 /*  This imported component should be given an upper case starting character because the lower case ones like div and h1
     are reserved for the actual HTML elements. */
 import Person from './Person/Person';
+
+const StyledButton = styled.button`
+                      background-color: ${props => props.alt ? 'red' : 'white'};
+                      font: inherit;
+                      border: 1px solid blue;
+                      padding: 8px;
+                      cursor: pointer;
+                      &:hover {
+                        background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
+                        color: black;
+                      }
+                    `;
 
 class App extends Component {
   /* State is a property of a class that extends a Component class. 
@@ -74,17 +87,17 @@ class App extends Component {
   /* React calls this method to render some HTML to the screen. This is JSX code. */
   /* Our JSX must have only one Root element per component. */
   render() {
-    const style = {
-      backgroundColor: 'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor: 'pointer',
-      ':hover': { // This is possible with Radium
-        backgroundColor: 'lightgreen',
-        color: 'black'
-      }
-    };
+    // const style = {
+    //   backgroundColor: 'white',
+    //   font: 'inherit',
+    //   border: '1px solid blue',
+    //   padding: '8px',
+    //   cursor: 'pointer',
+    //   ':hover': { // This is possible with Radium
+    //     backgroundColor: 'lightgreen',
+    //     color: 'black'
+    //   }
+    // };
 
     let persons = null;
 
@@ -103,11 +116,11 @@ class App extends Component {
         </div> 
       );
 
-      style.backgroundColor = 'green';
-      style[':hover'] =  { // This is possible with Radium. Can work with pseudo selectors
-        backgroundColor: 'salmon',
-        color: 'black'
-      }
+      // style.backgroundColor = 'green';
+      // style[':hover'] =  { // This is possible with Radium. Can work with pseudo selectors
+      //   backgroundColor: 'salmon',
+      //   color: 'black'
+      // }
     }
 
     const classes = [];
@@ -121,7 +134,7 @@ class App extends Component {
 
     // We need to wrap our component UI in this StyleRoot component provided by radium for media queries, keyframes and some others.
     return ( // These paranthesis are used so that we could structure this JSX across multiple lines.
-      <StyleRoot>
+      // <StyleRoot>
         <div className="App">
           <h3> Hi I am an App!!</h3>
           <p className={classes.join(' ')} >This is really working !!</p>
@@ -133,11 +146,11 @@ class App extends Component {
             Even though our handler is called here, it won't be executed untill our anaonymos function is called on click. 
             This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
             methods. */}
-          <button style={style} onClick={this.togglePersonHandler}>Toggle Persons</button> 
+          <StyledButton alt={this.state.showPersons} onClick={this.togglePersonHandler}>Toggle Persons</StyledButton> 
           {persons}
             
         </div>
-      </StyleRoot>
+      // </StyleRoot>
     );
     /* the code above compiles to this below: 
        The argument flow :
@@ -154,4 +167,6 @@ class App extends Component {
 }
 
 //Radium here is a higher order component that wraps our component and adds some extra funtionalities to it.
-export default Radium(App);
+// export default Radium(App);
+
+export default App;
