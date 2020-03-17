@@ -1,22 +1,10 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import './App.css';
 // import Radium, {StyleRoot} from 'radium';
 /*  This imported component should be given an upper case starting character because the lower case ones like div and h1
     are reserved for the actual HTML elements. */
 import Person from './Person/Person';
-
-const StyledButton = styled.button`
-                      background-color: ${props => props.alt ? 'red' : 'white'};
-                      font: inherit;
-                      border: 1px solid blue;
-                      padding: 8px;
-                      cursor: pointer;
-                      &:hover {
-                        background-color: ${props => props.alt ? 'salmon' : 'lightgreen'};
-                        color: black;
-                      }
-                    `;
 
 class App extends Component {
   /* State is a property of a class that extends a Component class. 
@@ -146,7 +134,10 @@ class App extends Component {
             Even though our handler is called here, it won't be executed untill our anaonymos function is called on click. 
             This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
             methods. */}
-          <StyledButton alt={this.state.showPersons} onClick={this.togglePersonHandler}>Toggle Persons</StyledButton> 
+          {/* <StyledButton alt={this.state.showPersons} onClick={this.togglePersonHandler}>Toggle Persons</StyledButton>  */}
+          <button className="button" onClick={this.togglePersonHandler}>
+            Toggle Persons
+          </button>
           {persons}
             
         </div>
