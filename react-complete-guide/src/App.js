@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-// import styled from 'styled-components';
-import './App.css';
+// This style of importing classes from the app.css file is available because we ejected the webpacked and tweeked it.
+// This imports properties on this classes object. The properties we are pointing at are class names in this app.css
+import classes from './App.css';
 // import Radium, {StyleRoot} from 'radium';
 /*  This imported component should be given an upper case starting character because the lower case ones like div and h1
     are reserved for the actual HTML elements. */
@@ -75,17 +76,8 @@ class App extends Component {
   /* React calls this method to render some HTML to the screen. This is JSX code. */
   /* Our JSX must have only one Root element per component. */
   render() {
-    // const style = {
-    //   backgroundColor: 'white',
-    //   font: 'inherit',
-    //   border: '1px solid blue',
-    //   padding: '8px',
-    //   cursor: 'pointer',
-    //   ':hover': { // This is possible with Radium
-    //     backgroundColor: 'lightgreen',
-    //     color: 'black'
-    //   }
-    // };
+    
+    let btnClass = '';
 
     let persons = null;
 
@@ -104,28 +96,24 @@ class App extends Component {
         </div> 
       );
 
-      // style.backgroundColor = 'green';
-      // style[':hover'] =  { // This is possible with Radium. Can work with pseudo selectors
-      //   backgroundColor: 'salmon',
-      //   color: 'black'
-      // }
+      btnClass = classes.Red;
     }
 
-    const classes = [];
+    const assignedClasses = [];
     if(this.state.persons.length <= 2) {
-      classes.push('red');
+      assignedClasses.push(classes.red);
     }
 
     if(this.state.persons.length <= 1) {
-      classes.push('bold');
+      assignedClasses.push(classes.bold);
     }
 
     // We need to wrap our component UI in this StyleRoot component provided by radium for media queries, keyframes and some others.
     return ( // These paranthesis are used so that we could structure this JSX across multiple lines.
       // <StyleRoot>
-        <div className="App">
+        <div className={classes.App}>
           <h3> Hi I am an App!!</h3>
-          <p className={classes.join(' ')} >This is really working !!</p>
+          <p className={assignedClasses.join(' ')} >This is really working !!</p>
           {/* If we add the paranthesis here in the onclick method assignment at the end , it would call the function as soon as this JSX is rendered in the DOM. 
             Instead we want to wait for the click action. We only want to pass the reference
             this.switchNameHandler.bind(this,'maximusss')
@@ -135,7 +123,7 @@ class App extends Component {
             This is a little inefficient way because react can rerender quite often and it will be passed these anonymos 
             methods. */}
           {/* <StyledButton alt={this.state.showPersons} onClick={this.togglePersonHandler}>Toggle Persons</StyledButton>  */}
-          <button className="button" onClick={this.togglePersonHandler}>
+          <button className={btnClass} onClick={this.togglePersonHandler}>
             Toggle Persons
           </button>
           {persons}
